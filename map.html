@@ -12,11 +12,39 @@
         #marker { position: absolute; width: 18px; height: 18px; background: #ef4444; border: 2px solid white; border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 20; }
         
         .axis-label-container { font-family: sans-serif; font-size: 10px; color: black; font-weight: bold; }
+
+        /* Login Overlay Styles */
+        #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body class="bg-slate-100 p-10 font-sans">
-    <div class="flex w-full gap-10 items-start justify-start">
-        
+    
+    <!-- Mock Login Functionality -->
+    <div id="login-overlay">
+        <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-2xl w-96 text-center">
+            <h2 class="text-sky-700 text-xl font-black uppercase tracking-tighter mb-6">Sentinel Login</h2>
+            <div class="space-y-4">
+                <input type="text" id="username" placeholder="Username" class="w-full px-4 py-2 border border-slate-300 rounded-lg outline-none focus:border-sky-500">
+                <input type="password" id="password" placeholder="Password" class="w-full px-4 py-2 border border-slate-300 rounded-lg outline-none focus:border-sky-500">
+                <button onclick="validateLogin()" class="w-full bg-sky-400 hover:bg-sky-500 text-white font-bold py-2 rounded-lg transition-colors">Login</button>
+                <p id="error-msg" class="text-red-500 text-xs font-bold uppercase hidden">Invalid Credentials</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <div id="dashboard-content" class="flex w-full gap-10 items-start justify-start" style="visibility: hidden;">
         <div class="flex flex-col items-center">
             <div class="flex flex-col w-full max-w-[800px] items-start mb-6">
                 <h1 class="text-sky-700 text-2xl font-black tracking-tighter uppercase">AMSA | Sentinel</h1>
@@ -64,11 +92,35 @@
         </div>
     </div>
 
+    <script type="text/javascript">
+        // Login Validation Logic
+        function validateLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const error = document.getElementById('error-msg');
+            
+            if (user === "SecurityManagement" && pass === "SecurityPassword") {
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('dashboard-content').style.visibility = 'visible';
+            } else {
+                error.classList.remove('hidden');
+            }
+        }
+    </script>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, query, orderBy, limit, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-<secret-config>
+        const firebaseConfig = {
+  apiKey: "AIzaSyD2jpTYKdq2xJdGVlSfKniFO0Tdzqi4rp8",
+  authDomain: "gridtracker-e8111.firebaseapp.com",
+  projectId: "gridtracker-e8111",
+  storageBucket: "gridtracker-e8111.firebasestorage.app",
+  messagingSenderId: "677378312342",
+  appId: "1:677378312342:web:f4066b36669fa976065ab7",
+  measurementId: "G-K1ZDJBNRZK"
+}
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
